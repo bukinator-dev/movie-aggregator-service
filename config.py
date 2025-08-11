@@ -16,9 +16,12 @@ class Config:
     HOST = os.getenv("HOST", "0.0.0.0")
     PORT = int(os.getenv("PORT", "8000"))
     
-    # External API settings (will be used in future steps)
-    # TMDB_API_KEY = os.getenv("TMDB_API_KEY")  # For movie data
-    # NEWS_API_KEY = os.getenv("NEWS_API_KEY")  # For interview data
+    # External API settings - Step 2: YouTube API Integration
+    YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+    YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3"
+    
+    # Future API settings (will be used in Steps 3-4)
+    # NEWS_API_KEY = os.getenv("NEWS_API_KEY")  # For additional interview data
     # SHOPIFY_API_KEY = os.getenv("SHOPIFY_API_KEY")  # For product data
     
     # Rate limiting (will be implemented in future steps)
