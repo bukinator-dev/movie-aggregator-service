@@ -59,6 +59,20 @@ export function useActorInterviews(actorName: string, movieTitle?: string, maxRe
   );
 }
 
+export function useActorInfo(actorName: string, maxResults: number = 20) {
+  return useApi(
+    () => MovieAggregatorAPI.getActorInfo(actorName, maxResults),
+    [actorName, maxResults]
+  );
+}
+
+export function useActorDiscovery(movieTitle: string, maxResults: number = 10) {
+  return useApi(
+    () => MovieAggregatorAPI.discoverActorsFromMovie(movieTitle, maxResults),
+    [movieTitle, maxResults]
+  );
+}
+
 export function useHealthCheck() {
   return useApi(
     () => MovieAggregatorAPI.getHealth(),

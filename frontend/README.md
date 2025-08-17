@@ -1,6 +1,6 @@
-# Movie Aggregator Frontend
+# Movie Actors Frontend
 
-A modern React frontend for the Movie Aggregator Service, built with TypeScript, Tailwind CSS, and Vite.
+A modern React frontend for the Movie Actors Service, built with TypeScript, Tailwind CSS, and Vite.
 
 ## 🚀 Features
 
@@ -117,4 +117,5 @@ The UI is fully responsive and works on:
 
 ## 📄 License
 
-This project is part of the Movie Aggregator Service.
+This project is part of the Movie Actors Service.
+

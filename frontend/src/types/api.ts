@@ -29,6 +29,7 @@ export interface MovieInfo {
   other: Video[];
   actors: any[]; // Will be populated in Step 3
   brand_products: any[]; // Will be populated in Step 4
+  actor_interviews?: Video[]; // Enhanced search results for actor interviews
 }
 
 export interface HealthResponse {
@@ -40,3 +41,5 @@ export interface ApiError {
   detail: string;
   status_code: number;
 }
+
+

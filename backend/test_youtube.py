@@ -6,6 +6,12 @@ Run this to test if your YouTube API key is working
 
 import os
 import asyncio
+import sys
+from pathlib import Path
+
+# Add the parent directory to the Python path to access services
+sys.path.append(str(Path(__file__).parent.parent))
+
 from dotenv import load_dotenv
 from services.youtube_service import YouTubeService
 

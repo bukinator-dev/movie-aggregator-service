@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FilmIcon, SearchIcon, UserIcon, HomeIcon } from 'lucide-react';
+import { FilmIcon, UserIcon, HomeIcon, TrendingUpIcon } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
     { path: '/', label: 'Home', icon: HomeIcon },
-    { path: '/search', label: 'Search Videos', icon: SearchIcon },
     { path: '/movie/inception', label: 'Movie Example', icon: FilmIcon },
     { path: '/actor/leonardo-dicaprio', label: 'Actor Example', icon: UserIcon },
+    { path: '/actors/trending', label: 'Trending', icon: TrendingUpIcon },
   ];
 
   return (
@@ -19,7 +19,7 @@ const Navigation: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <FilmIcon className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">Movie Aggregator</span>
+            <span className="text-xl font-bold text-gray-900">Movie Actors</span>
           </Link>
 
           {/* Navigation Links */}
@@ -60,3 +60,4 @@ const Navigation: React.FC = () => {
 };
 
 export default Navigation;
+

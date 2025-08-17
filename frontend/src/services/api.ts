@@ -4,7 +4,7 @@ import { MovieInfo, Video, HealthResponse, ApiError } from '../types/api';
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: '/api', // This will be proxied to your Python backend
-  timeout: 10000,
+  timeout: 30000, // Increased timeout to 30 seconds for movie searches
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,7 +19,7 @@ export class MovieAggregatorAPI {
   }
 
   // Get movie information with YouTube content
-  static async getMovieInfo(movieTitle: string, maxResults: number = 20): Promise<MovieInfo> {
+  static async getMovieInfo(movieTitle: string, maxResults: number = 10): Promise<MovieInfo> {
     const response: AxiosResponse<MovieInfo> = await api.get(`/movie/${encodeURIComponent(movieTitle)}`, {
       params: { max_results: maxResults }
     });
@@ -27,7 +27,7 @@ export class MovieAggregatorAPI {
   }
 
   // Search for videos
-  static async searchVideos(query: string, maxResults: number = 10): Promise<Video[]> {
+  static async searchVideos(query: string, maxResults: number = 8): Promise<Video[]> {
     const response: AxiosResponse<Video[]> = await api.get(`/search/${encodeURIComponent(query)}`, {
       params: { max_results: maxResults }
     });
@@ -35,7 +35,7 @@ export class MovieAggregatorAPI {
   }
 
   // Get actor interviews
-  static async getActorInterviews(actorName: string, movieTitle?: string, maxResults: number = 10): Promise<Video[]> {
+  static async getActorInterviews(actorName: string, movieTitle?: string, maxResults: number = 8): Promise<Video[]> {
     const params: any = { max_results: maxResults };
     if (movieTitle) {
       params.movie_title = movieTitle;
@@ -43,6 +43,81 @@ export class MovieAggregatorAPI {
     
     const response: AxiosResponse<Video[]> = await api.get(`/interviews/${encodeURIComponent(actorName)}`, {
       params
+    });
+    return response.data;
+  }
+
+  // Get comprehensive actor information
+  static async getActorInfo(actorName: string, maxResults: number = 12): Promise<any> {
+    const response: AxiosResponse<any> = await api.get(`/actor/${encodeURIComponent(actorName)}`, {
+      params: { max_results: maxResults }
+    });
+    return response.data;
+  }
+
+  // Discover actors from a movie
+  static async discoverActorsFromMovie(movieTitle: string, maxResults: number = 10): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/discover/actors`, {
+      params: { 
+        movie_title: movieTitle,
+        max_results: maxResults 
+      }
+    });
+    return response.data;
+  }
+
+  // Step 3: New Actor Interview Aggregation endpoints
+  
+  // Search for actors by name
+  static async searchActors(query: string, maxResults: number = 10): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/actors/search`, {
+      params: { 
+        query: query,
+        max_results: maxResults 
+      }
+    });
+    return response.data;
+  }
+
+  // Analyze actor interviews
+  static async analyzeActorInterviews(actorName: string, maxResults: number = 20): Promise<any> {
+    const response: AxiosResponse<any> = await api.get(`/actor/${encodeURIComponent(actorName)}/interviews/analysis`, {
+      params: { max_results: maxResults }
+    });
+    return response.data;
+  }
+
+  // Get actor career timeline
+  static async getActorCareer(actorName: string, maxResults: number = 50): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/actor/${encodeURIComponent(actorName)}/career`, {
+      params: { max_results: maxResults }
+    });
+    return response.data;
+  }
+
+  // Get actor collaborations
+  static async getActorCollaborations(actorName: string, maxResults: number = 20): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/actor/${encodeURIComponent(actorName)}/collaborations`, {
+      params: { max_results: maxResults }
+    });
+    return response.data;
+  }
+
+  // Get trending actors
+  static async getTrendingActors(period: string = "week", maxResults: number = 10): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/actors/trending`, {
+      params: { 
+        period: period,
+        max_results: maxResults 
+      }
+    });
+    return response.data;
+  }
+
+  // Get actors by genre
+  static async getActorsByGenre(genre: string, maxResults: number = 15): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await api.get(`/actors/genre/${encodeURIComponent(genre)}`, {
+      params: { max_results: maxResults }
     });
     return response.data;
   }
@@ -63,3 +138,4 @@ export const handleApiError = (error: any): ApiError => {
 };
 
 export default MovieAggregatorAPI;
+

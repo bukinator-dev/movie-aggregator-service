@@ -1,7 +1,7 @@
 {
-  "name": "movie-aggregator-frontend",
+  "name": "movie-actors-frontend",
   "version": "1.0.0",
-  "description": "React frontend for Movie Aggregator Service",
+  "description": "React frontend for Movie Actors Service - Discover Actor Interviews & Movie Content",
   "private": true,
   "dependencies": {
     "react": "^18.2.0",

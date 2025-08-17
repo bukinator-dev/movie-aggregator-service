@@ -20,6 +20,11 @@ class Config:
     YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
     YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3"
     
+    # YouTube API optimization settings
+    YOUTUBE_REQUEST_TIMEOUT = float(os.getenv("YOUTUBE_REQUEST_TIMEOUT", "15.0"))
+    YOUTUBE_BATCH_SIZE = int(os.getenv("YOUTUBE_BATCH_SIZE", "50"))
+    YOUTUBE_MAX_RESULTS = int(os.getenv("YOUTUBE_MAX_RESULTS", "15"))
+    
     # Future API settings (will be used in Steps 3-4)
     # NEWS_API_KEY = os.getenv("NEWS_API_KEY")  # For additional interview data
     # SHOPIFY_API_KEY = os.getenv("SHOPIFY_API_KEY")  # For product data
