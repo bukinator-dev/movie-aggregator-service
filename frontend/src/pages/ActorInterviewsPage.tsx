@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useActorInterviews } from '../hooks/useApi';
-import { PlayIcon, EyeIcon, CalendarIcon, UserIcon, FilmIcon } from 'lucide-react';
+import { PlayIcon, EyeIcon, CalendarIcon, UserIcon } from 'lucide-react';
 
 const ActorInterviewsPage: React.FC = () => {
   const { actorName } = useParams<{ actorName: string }>();

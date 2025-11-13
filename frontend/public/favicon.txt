@@ -1,0 +1,34 @@
+FAVICON CREATION INSTRUCTIONS
+==============================
+
+I've created an SVG favicon for you, but you'll need to create the actual binary files:
+
+1. SVG FAVICON (already created):
+   - File: favicon.svg
+   - This is a modern, scalable favicon that works in most browsers
+   - Features a movie camera design with your app's yellow theme
+
+2. ICO FAVICON (needs to be created):
+   - Convert the SVG to a .ico file
+   - Recommended sizes: 16x16, 32x32, 48x48 pixels
+   - Online converters: favicon.io, realfavicongenerator.net
+
+3. PNG FAVICON (needs to be created):
+   - Convert the SVG to a 32x32 PNG file
+   - Replace the placeholder favicon-32x32.png
+
+4. MANIFEST (already created):
+   - File: manifest.json
+   - Provides PWA support and icon definitions
+
+QUICK SETUP:
+1. Go to favicon.io
+2. Upload the favicon.svg file
+3. Download the generated .ico and .png files
+4. Replace the placeholder files in the public folder
+
+The favicon will now appear in:
+- Browser tabs
+- Bookmarks
+- Mobile home screen shortcuts
+- PWA installations

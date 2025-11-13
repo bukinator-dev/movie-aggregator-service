@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  
+  <!-- Movie camera body -->
+  <rect x="25" y="35" width="50" height="30" rx="5" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  
+  <!-- Camera lens -->
+  <circle cx="50" cy="50" r="12" fill="#6b7280" stroke="#374151" stroke-width="2"/>
+  <circle cx="50" cy="50" r="8" fill="#9ca3af"/>
+  <circle cx="50" cy="50" r="4" fill="#d1d5db"/>
+  
+  <!-- Film reel -->
+  <circle cx="30" cy="50" r="8" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+  <circle cx="70" cy="50" r="8" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+  
+  <!-- Film strip holes -->
+  <circle cx="30" cy="42" r="1.5" fill="#1f2937"/>
+  <circle cx="30" cy="58" r="1.5" fill="#1f2937"/>
+  <circle cx="70" cy="42" r="1.5" fill="#1f2937"/>
+  <circle cx="70" cy="58" r="1.5" fill="#1f2937"/>
+  
+  <!-- Camera handle -->
+  <rect x="40" y="25" width="20" height="8" rx="4" fill="#374151"/>
+  <rect x="45" y="23" width="10" height="4" rx="2" fill="#6b7280"/>
+</svg>

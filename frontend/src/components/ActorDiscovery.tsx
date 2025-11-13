@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useActorDiscovery } from '../hooks/useApi';
-import { SearchIcon, UserIcon, PlayIcon, EyeIcon } from 'lucide-react';
+import { UserIcon, PlayIcon, EyeIcon } from 'lucide-react';
 
 interface ActorDiscoveryProps {
   movieTitle: string;

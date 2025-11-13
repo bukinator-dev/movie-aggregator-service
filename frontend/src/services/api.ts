@@ -18,8 +18,16 @@ export class MovieAggregatorAPI {
     return response.data;
   }
 
+  // Get movie soundtrack and music information
+  static async getMovieSoundtrack(movieTitle: string, maxResults: number = 50): Promise<any> {
+    const response: AxiosResponse<any> = await api.get(`/movie/${encodeURIComponent(movieTitle)}/soundtrack`, {
+      params: { max_results: maxResults }
+    });
+    return response.data;
+  }
+
   // Get movie information with YouTube content
-  static async getMovieInfo(movieTitle: string, maxResults: number = 10): Promise<MovieInfo> {
+  static async getMovieInfo(movieTitle: string, maxResults: number = 50): Promise<MovieInfo> {
     const response: AxiosResponse<MovieInfo> = await api.get(`/movie/${encodeURIComponent(movieTitle)}`, {
       params: { max_results: maxResults }
     });
@@ -27,7 +35,7 @@ export class MovieAggregatorAPI {
   }
 
   // Search for videos
-  static async searchVideos(query: string, maxResults: number = 8): Promise<Video[]> {
+  static async searchVideos(query: string, maxResults: number = 50): Promise<Video[]> {
     const response: AxiosResponse<Video[]> = await api.get(`/search/${encodeURIComponent(query)}`, {
       params: { max_results: maxResults }
     });
@@ -56,7 +64,7 @@ export class MovieAggregatorAPI {
   }
 
   // Discover actors from a movie
-  static async discoverActorsFromMovie(movieTitle: string, maxResults: number = 10): Promise<any[]> {
+  static async discoverActorsFromMovie(movieTitle: string, maxResults: number = 50): Promise<any[]> {
     const response: AxiosResponse<any[]> = await api.get(`/discover/actors`, {
       params: { 
         movie_title: movieTitle,
@@ -69,7 +77,7 @@ export class MovieAggregatorAPI {
   // Step 3: New Actor Interview Aggregation endpoints
   
   // Search for actors by name
-  static async searchActors(query: string, maxResults: number = 10): Promise<any[]> {
+  static async searchActors(query: string, maxResults: number = 50): Promise<any[]> {
     const response: AxiosResponse<any[]> = await api.get(`/actors/search`, {
       params: { 
         query: query,

@@ -1,9 +1,14 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from pydantic import BaseModel, validator
 from typing import List, Optional, Dict, Any
 import uvicorn
 import sys
+import re
+import time
 from pathlib import Path
+from collections import defaultdict
 
 # Add the parent directory to the Python path to access services
 sys.path.append(str(Path(__file__).parent.parent))
@@ -15,6 +20,56 @@ app = FastAPI(
     description="Aggregates interviews with actors and brand-related products for movies",
     version="1.0.0"
 )
+
+# Add security middleware
+app.add_middleware(
+    TrustedHostMiddleware, 
+    allowed_hosts=["localhost", "127.0.0.1", "*.yourdomain.com"]  # Add your production domain
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Add your production domain
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
+# Simple rate limiting storage
+rate_limit_storage = defaultdict(list)
+
+def rate_limit_check(client_ip: str, max_requests: int = 100, window: int = 60) -> bool:
+    """Simple rate limiting check"""
+    current_time = time.time()
+    # Clean old requests
+    rate_limit_storage[client_ip] = [
+        req_time for req_time in rate_limit_storage[client_ip] 
+        if current_time - req_time < window
+    ]
+    
+    # Check if limit exceeded
+    if len(rate_limit_storage[client_ip]) >= max_requests:
+        return False
+    
+    # Add current request
+    rate_limit_storage[client_ip].append(current_time)
+    return True
+
+def validate_input(text: str, max_length: int = 100) -> str:
+    """Validate and sanitize input"""
+    if not text or not isinstance(text, str):
+        raise HTTPException(status_code=400, detail="Invalid input")
+    
+    # Remove potentially dangerous characters
+    sanitized = re.sub(r'[<>"\']', '', text.strip())
+    
+    if len(sanitized) > max_length:
+        raise HTTPException(status_code=400, detail=f"Input too long. Max {max_length} characters.")
+    
+    if len(sanitized) < 1:
+        raise HTTPException(status_code=400, detail="Input cannot be empty")
+    
+    return sanitized
 
 # Data models - Updated for Step 2: YouTube Integration
 class Video(BaseModel):
@@ -124,7 +179,7 @@ async def health_check():
     )
 
 @app.get("/movie/{movie_title}", response_model=MovieInfo)
-async def get_movie_info(movie_title: str, max_results: int = 10):
+async def get_movie_info(movie_title: str, max_results: int = 50, request: Request = None):
     """
     Get movie information with YouTube content (Step 2 implementation)
     
@@ -139,6 +194,16 @@ async def get_movie_info(movie_title: str, max_results: int = 10):
     - Brand/product aggregation (Step 4)
     """
     try:
+        # Rate limiting check
+        if request:
+            client_ip = request.client.host
+            if not rate_limit_check(client_ip):
+                raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again later.")
+        
+        # Input validation
+        movie_title = validate_input(movie_title, max_length=100)
+        if max_results > 100:
+            max_results = 100  # Cap at 100 to prevent abuse
         # Step 2: YouTube content search for movies (now optimized with batch fetching)
         videos = await youtube_service.search_movie_content(movie_title, max_results)
         
@@ -302,7 +367,7 @@ async def get_actor_info(actor_name: str, max_results: int = 15):
         )
 
 @app.get("/discover/actors", response_model=List[ActorDiscoveryResult])
-async def discover_actors_from_movie(movie_title: str, max_results: int = 10):
+async def discover_actors_from_movie(movie_title: str, max_results: int = 50):
     """
     Discover actors from a movie (Step 3: Actor Discovery)
     
@@ -335,7 +400,7 @@ async def discover_actors_from_movie(movie_title: str, max_results: int = 10):
         )
 
 @app.get("/actors/search", response_model=List[ActorDiscoveryResult])
-async def search_actors(query: str, max_results: int = 10):
+async def search_actors(query: str, max_results: int = 50):
     """
     Search for actors by name or partial match (Step 3: Actor Search)
     
@@ -444,7 +509,7 @@ async def get_actor_collaborations(actor_name: str, max_results: int = 20):
         )
 
 @app.get("/actors/trending", response_model=List[ActorDiscoveryResult])
-async def get_trending_actors(period: str = "week", max_results: int = 10):
+async def get_trending_actors(period: str = "week", max_results: int = 50):
     """
     Get trending actors based on recent interview activity (Step 3: Trending Analysis)
     
@@ -491,6 +556,51 @@ async def get_actors_by_genre(genre: str, max_results: int = 15):
         raise HTTPException(
             status_code=500,
             detail=f"Error fetching actors by genre: {str(e)}"
+        )
+
+@app.get("/movie/{movie_title}/soundtrack", response_model=Dict[str, Any])
+async def get_movie_soundtrack(movie_title: str, max_results: int = 50):
+    """
+    Get soundtrack and music information for a movie or TV show
+    
+    Returns:
+    - Original soundtrack information
+    - Music-related videos (covers, remixes, analysis)
+    - Song lists and track information
+    - Music videos and performances
+    """
+    try:
+        # Search for music-related content
+        music_videos = await youtube_service.search_movie_content(f"{movie_title} soundtrack", max_results)
+        music_covers = await youtube_service.search_movie_content(f"{movie_title} music cover", max_results // 2)
+        music_analysis = await youtube_service.search_movie_content(f"{movie_title} music analysis", max_results // 2)
+        
+        # Combine and categorize music content
+        soundtrack_info = {
+            "movie_title": movie_title,
+            "original_soundtrack": {
+                "tracks": [],  # Will be populated in future steps with external music APIs
+                "composer": None,
+                "release_date": None,
+                "total_tracks": 0
+            },
+            "music_videos": music_videos,
+            "music_covers": music_covers,
+            "music_analysis": music_analysis,
+            "total_music_content": len(music_videos) + len(music_covers) + len(music_analysis),
+            "categories": {
+                "soundtrack": len(music_videos),
+                "covers": len(music_covers),
+                "analysis": len(music_analysis)
+            }
+        }
+        
+        return soundtrack_info
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error fetching soundtrack information: {str(e)}"
         )
 
 if __name__ == "__main__":

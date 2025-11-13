@@ -112,7 +112,7 @@ class YouTubeService:
             print(f"Batch video details error: {str(e)}")
             return []
     
-    async def search_movie_content(self, movie_title: str, max_results: int = 10) -> List[Dict[str, Any]]:
+    async def search_movie_content(self, movie_title: str, max_results: int = 50) -> List[Dict[str, Any]]:
         """
         Search for movie-related content on YouTube
         

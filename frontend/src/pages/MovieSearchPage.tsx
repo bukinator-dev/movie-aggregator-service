@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMovieInfo } from '../hooks/useApi';
-import { PlayIcon, EyeIcon, ThumbsUpIcon, MessageCircleIcon, CalendarIcon } from 'lucide-react';
+import { PlayIcon, EyeIcon, CalendarIcon } from 'lucide-react';
 
 const MovieSearchPage: React.FC = () => {
   const { movieTitle } = useParams<{ movieTitle: string }>();
